@@ -4,5 +4,5 @@
 int main()
 {
 	create_main_window();
-	create_ddm();
+	create_menu_bar();
 }
