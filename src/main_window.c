@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include "drop_down_menus.h"
 #include <gtk/gtk.h>
 
 int activate(GtkApplication *app, gpointer user_data)
@@ -6,11 +7,11 @@ int activate(GtkApplication *app, gpointer user_data)
 	GtkWidget *window;
 	
 	window = gtk_application_window_new(app);
-	//gtk_signal_connect(GTK_OBJECT(window), "destroy", () gtk_exit, NULL);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 	gtk_window_set_title(GTK_WINDOW(window), "MariaDB Manager");
 	gtk_window_present (GTK_WINDOW(window));
-	create_menu_bar(window);
+	create_menu_bar(window, app);
 }
 
 int create_main_window()
