@@ -12,6 +12,8 @@ int activate(GtkApplication *app, gpointer user_data)
 	gtk_window_set_title(GTK_WINDOW(window), "MariaDB Manager");
 	gtk_window_present (GTK_WINDOW(window));
 	create_menu_bar(window, app);
+	
+	return 0;
 }
 
 int create_main_window()
@@ -23,4 +25,6 @@ int create_main_window()
 	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
 	app_status = g_application_run (G_APPLICATION (app), 0, 0);
 	g_object_unref(app);
+	
+	return 0;
 }

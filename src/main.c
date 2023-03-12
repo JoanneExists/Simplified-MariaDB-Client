@@ -3,5 +3,5 @@
 
 int main()
 {
-	create_main_window();
+	return create_main_window();
 }

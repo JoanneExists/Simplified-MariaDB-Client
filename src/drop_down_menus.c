@@ -4,6 +4,12 @@
 int quit_app(GtkApplication *app, gpointer user_data)
 {
 	g_application_quit(G_APPLICATION(user_data));
+	return 0;
+}
+
+int login(GtkApplication *app, gpointer user_data)
+{
+	return 0;
 }
 
 int create_menu_bar(GtkWidget *window, GtkApplication *app)
@@ -73,4 +79,6 @@ int create_menu_bar(GtkWidget *window, GtkApplication *app)
 	g_signal_connect(G_OBJECT(quit_mi), "activate", G_CALLBACK(quit_app), app);
 	g_signal_connect(G_OBJECT(login_mi), "activate", G_CALLBACK(login), app);
 	gtk_widget_show_all(window);
+	
+	return 0;
 }
