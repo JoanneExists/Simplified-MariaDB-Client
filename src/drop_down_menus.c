@@ -9,6 +9,7 @@ int quit_app(GtkApplication *app, gpointer user_data)
 
 int login(GtkApplication *app, gpointer user_data)
 {
+	
 	return 0;
 }
 
