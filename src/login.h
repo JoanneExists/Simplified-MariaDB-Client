@@ -4,6 +4,6 @@
 #define LOGIN_H_
 
 int create_dialog(gchar *message);
-int create_login_window(GtkWidget *window, GtkApplication *app);
+int create_login_window(GtkWindow *window, GtkApplication *app);
 
 #endif

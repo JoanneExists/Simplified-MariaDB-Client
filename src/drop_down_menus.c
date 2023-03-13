@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include "drop_down_menus.h"
+#include "login.h"
 
 int quit_app(GtkApplication *app, gpointer user_data)
 {
@@ -7,9 +8,9 @@ int quit_app(GtkApplication *app, gpointer user_data)
 	return 0;
 }
 
-int login(GtkApplication *app, gpointer user_data)
+int login(GtkApplication *app, GtkWindow *window, gpointer user_data)
 {
-	
+	create_login_window(window, app);
 	return 0;
 }
 
