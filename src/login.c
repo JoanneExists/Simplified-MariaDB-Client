@@ -12,6 +12,8 @@ int create_dialog(GtkWindow *parent_window, gchar *message)
 	GtkWidget *pwd_input_field;
 	GtkWidget *login_label;
 	GtkWidget *pwd_label;
+	GtkWidget *un_field;
+	GtkWidget *pwd_field;
 	GtkDialogFlags flags;
 
 	dialog =  gtk_dialog_new_with_buttons ("Log into MariaDB",
@@ -24,6 +26,9 @@ int create_dialog(GtkWindow *parent_window, gchar *message)
                                       NULL);
     dialog_contents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));             
     login_label = gtk_label_new (message);
+    un_field = gtk_entry_new();
+    gtk_container_add (GTK_CONTAINER (dialog_contents), login_label);
+    gtk_container_add (GTK_CONTAINER (dialog_contents), un_field);
 	
 	g_signal_connect_swapped (dialog,
                            "response",
