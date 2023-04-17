@@ -1,41 +1,52 @@
 #include <gtk/gtk.h>
-
-int maria_db_login()
+#include <mariadb/mysql.h>
+#include "login.h"
+int login_clicked(GtkDialog *dialog, gint response_id, gpointer user_data)
 {
+	const gchar *username = gtk_entry_get_text(GTK_ENTRY(username_entry));
+    const gchar *password = gtk_entry_get_text(GTK_ENTRY(password_entry));
+    MYSQL *conn = mysql_init(NULL);
+    if (conn == NULL) {
+        printf("Failed to initialize MariaDB connection: %s\n", mysql_error(conn));
+        return 1;
+    }
+
+    if (mysql_real_connect(conn, "localhost", "username", "password", "legislation", 0, NULL, 0) == NULL) {
+        printf("Failed to connect to MariaDB database: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return 1;
+    }
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+
 	return 0;
 }
 int create_dialog(GtkWindow *parent_window, gchar *message)
 {
-	GtkWidget *dialog;
-	GtkWidget *dialog_contents;
-	GtkWidget *login_input_field;
-	GtkWidget *pwd_input_field;
-	GtkWidget *login_label;
-	GtkWidget *pwd_label;
-	GtkWidget *un_field;
-	GtkWidget *pwd_field;
-	GtkDialogFlags flags;
+	// the dialog window itself
+	GtkWidget *dialog = gtk_dialog_new();
+	gtk_window_set_title(GTK_WINDOW(dialog), "Login to MariaDB");
+	// create the content area and the box widget
+	GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	gtk_container_add(GTK_CONTAINER(content_area), box);
+	// add the content area to the box and initialize box and content_area
+	gtk_container_add(GTK_CONTAINER(content_area), box);
+	// create the usernam and password entry widgets
+	GtkWidget *username_entry = gtk_entry_new();
+	GtkWidget *password_entry = gtk_entry_new();
+	gtk_entry_set_visibility(GTK_ENTRY(password_entry), FALSE);
+	// add the labels and entry areas to the box
+	gtk_box_pack_start(GTK_BOX(box), gtk_label_new("Username:"), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(box), username_entry, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(box), gtk_label_new("Password:"), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(box), password_entry, FALSE, FALSE, 0);
+	// create the login button and connect the signals
+	GtkWidget *login_button = gtk_dialog_add_button(GTK_DIALOG(dialog), "Login", GTK_RESPONSE_OK);
+	GtkWidget *cancel_button = gtk_dialog_add_button(GTK_DIALOG(dialog), "Cancel", GTK_RESPONSE_CANCEL);
+	g_signal_connect_swapped(login_button, "clicked", G_CALLBACK(login_clicked), dialog);
+	g_signal_connect_swapped(cancel_button, "clicked", G_CALLBACK(gtk_widget_destroy), dialog);
 
-	dialog =  gtk_dialog_new_with_buttons ("Log into MariaDB",
-                                      parent_window,
-                                      flags,
-                                      "Login",
-                                      GTK_RESPONSE_ACCEPT,
-                                      "Cancel",
-                                      GTK_RESPONSE_REJECT,
-                                      NULL);
-    dialog_contents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));             
-    login_label = gtk_label_new (message);
-    un_field = gtk_entry_new();
-    gtk_container_add (GTK_CONTAINER (dialog_contents), login_label);
-    gtk_container_add (GTK_CONTAINER (dialog_contents), un_field);
-	
-	g_signal_connect_swapped (dialog,
-                           "response",
-                           G_CALLBACK (gtk_widget_destroy),
-                           dialog);
-	gtk_box_pack_start(GTK_BOX (dialog_contents), login_label, FALSE, FALSE, 0);
-	gtk_widget_show (dialog);
+	gtk_widget_show_all(dialog);
 	return 0;
 }
 
