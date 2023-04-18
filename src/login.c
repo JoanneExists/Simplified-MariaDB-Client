@@ -1,10 +1,12 @@
 #include <gtk/gtk.h>
 #include <mariadb/mysql.h>
 #include "login.h"
-int login_clicked(GtkDialog *dialog, gint response_id, gpointer user_data)
+int login_clicked(GtkWidget *dialog, gint response_id, gpointer user_data, GtkWidget *username_entry, GtkWidget *password_entry)
 {
+	// char arrays to hold username and password
 	const gchar *username = gtk_entry_get_text(GTK_ENTRY(username_entry));
     const gchar *password = gtk_entry_get_text(GTK_ENTRY(password_entry));
+    // start the server connection
     MYSQL *conn = mysql_init(NULL);
     if (conn == NULL) {
         printf("Failed to initialize MariaDB connection: %s\n", mysql_error(conn));
@@ -19,6 +21,16 @@ int login_clicked(GtkDialog *dialog, gint response_id, gpointer user_data)
     gtk_widget_destroy(GTK_WIDGET(dialog));
 
 	return 0;
+}
+// Callback function for handling Enter key press
+gboolean on_key_press(GtkWidget *dialog, GdkEventKey *event, gpointer data, gint response_id, gpointer user_data, GtkWidget *username_entry, GtkWidget *password_entry) 
+{
+    if (event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter) {
+        // Call button_activate function
+        login_clicked(dialog, response_id, user_data, username_entry, password_entry);
+        return TRUE;
+    }
+    return FALSE;
 }
 int create_dialog(GtkWindow *parent_window, gchar *message)
 {
@@ -45,7 +57,8 @@ int create_dialog(GtkWindow *parent_window, gchar *message)
 	GtkWidget *cancel_button = gtk_dialog_add_button(GTK_DIALOG(dialog), "Cancel", GTK_RESPONSE_CANCEL);
 	g_signal_connect_swapped(login_button, "clicked", G_CALLBACK(login_clicked), dialog);
 	g_signal_connect_swapped(cancel_button, "clicked", G_CALLBACK(gtk_widget_destroy), dialog);
-
+	g_signal_connect(parent_window, "key-press-event", G_CALLBACK(on_key_press), login_button);
+	// make the widgets that were added visible
 	gtk_widget_show_all(dialog);
 	return 0;
 }

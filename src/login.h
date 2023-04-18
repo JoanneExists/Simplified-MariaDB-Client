@@ -5,6 +5,6 @@
 
 int create_dialog(GtkWindow *parent_window, gchar *message);
 int create_login_window(GtkWindow *window, GtkApplication *app);
-int login_clicked(GtkDialog *dialog, gint response_id, gpointer user_data);
+int login_clicked(GtkWidget *dialog, gint response_id, gpointer user_data, GtkWidget *username_entry, GtkWidget *password_entry);
 
 #endif
